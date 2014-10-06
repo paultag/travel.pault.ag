@@ -2,6 +2,6 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'public.views.home', name='home'),
-    # url(r'^travel/', include('travel.urls')),
+    url(r'^$', 'travel.views.home', name='home'),
+    url(r'^trips/(?P<user>.*)/$', 'travel.views.trips', name='trips'),
 )

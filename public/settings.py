@@ -4,6 +4,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "")
 DEBUG = True
 TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = []
+TEMPLATE_DIRS = [
+    os.path.join(BASE_DIR, "templates")
+]
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',

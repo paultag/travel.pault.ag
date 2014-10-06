@@ -1,0 +1,12 @@
+{% extends "travel/base.html" %}
+
+{% block content %}
+<dl>
+{% for trip in trips %}
+    <dt>{{trip.reason}}</dt>
+    {% for flight in trip.flights.all %}
+        <dd>{{flight.flight_number}}</dd>
+    {% endfor %}
+{% endfor %}
+</dl>
+{% endblock %}

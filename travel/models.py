@@ -24,3 +24,8 @@ class Flight(models.Model):
     arrival_time = models.DateTimeField()
     carrier = models.ForeignKey(ServiceProvider)
     trip = models.ForeignKey(Trip, related_name="flights")
+
+    def __str__(self):
+        return "<Flight: {} on {}>".format(
+            self.flight_number, self.departure_time
+        )
