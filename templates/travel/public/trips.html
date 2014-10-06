@@ -4,8 +4,8 @@
 <dl>
 {% for trip in trips %}
     <dt>{{trip.reason}}</dt>
-    {% for flight in trip.flights.all %}
-        <dd>{{flight.flight_number}}</dd>
+    {% for leg in trip.get_legs %}
+        <dd>{{leg}}</dd>
     {% endfor %}
 {% endfor %}
 </dl>

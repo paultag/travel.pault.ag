@@ -1,10 +1,23 @@
 from django.db import models
 from django.contrib.auth.models import User
+import datetime as dt
 
 
 class Trip(models.Model):
     user = models.ForeignKey(User)
     reason = models.TextField()
+
+    @classmethod
+    def get_active_trips(cls):
+        now = dt.datetime.utcnow()
+        # Query on any flights arriving in the future
+        return Trip.objects.filter(
+            flights__arrival_time__gte=now
+        )
+
+    @property
+    def get_legs(self):
+        yield from self.flights.all()
 
 
 class ServiceProvider(models.Model):
