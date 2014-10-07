@@ -15,6 +15,9 @@ class Trip(models.Model):
             flights__arrival_time__gte=now
         )
 
+    def __str__(self):
+        return "<Trip: {}>".format(self.name)
+
 
 class ServiceProvider(models.Model):
     name = models.CharField(max_length=128)
@@ -26,15 +29,29 @@ class ServiceProvider(models.Model):
         return "<ServiceProvider: {}>".format(self.name)
 
 
+class Airport(models.Model):
+    name = models.CharField(max_length=128)
+    code = models.CharField(max_length=16)
+    lat = models.CharField(max_length=128)
+    lon = models.CharField(max_length=128)
+
+    def __str__(self):
+        return "<Airport: {}>".format(self.code)
+
+
 class Flight(models.Model):
     user = models.ForeignKey(User)
     flight_number = models.CharField(max_length=128)
+    origin = models.ForeignKey(Airport, related_name="inbound_flights")
+    destination = models.ForeignKey(Airport, related_name="outbound_flights")
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
     carrier = models.ForeignKey(ServiceProvider, related_name="flights")
     trip = models.ForeignKey(Trip, related_name="flights")
 
     def __str__(self):
-        return "<Flight: {} on {}>".format(
-            self.flight_number, self.departure_time
+        return "<Flight: {} {} on {}>".format(
+            self.carrier.name,
+            self.flight_number,
+            self.departure_time
         )
