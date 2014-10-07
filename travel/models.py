@@ -9,10 +9,11 @@ class Trip(models.Model):
     reason = models.TextField()
 
     @classmethod
-    def get_active_trips(cls):
+    def get_active_trips(cls, **filters):
         now = dt.datetime.utcnow()
         return Trip.objects.filter(
-            flights__arrival_time__gte=now
+            flights__arrival_time__gte=now,
+            **filters
         )
 
     def __str__(self):

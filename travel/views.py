@@ -9,8 +9,9 @@ def home(request):
 
 
 def trips(request, user):
-    trips = Trip.get_active_trips()
-
+    user = User.objects.get(username=user)
+    trips = Trip.get_active_trips(user=user)
     return render(request, "travel/public/trips.html", {
         "trips": trips,
+        "user": user,
     })

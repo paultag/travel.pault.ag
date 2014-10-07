@@ -1,12 +1,21 @@
 {% extends "travel/base.html" %}
+{% load humanize %}
 
 {% block content %}
-<dl>
 {% for trip in trips %}
-    <dt>{{trip.reason}}</dt>
-    {% for leg in trip.get_legs %}
-        <dd>{{leg}}</dd>
-    {% endfor %}
+<div>
+{{user.first_name}}'s trips.
+
+<h1>{{trip.name}}</h1>
+<p>{{trip.reason}}</p>
+{% for flight in trip.flights.all %}
+<div>
+    <h2>{{flight.carrier.name}} flight {{flight.flight_number}}
+        ({{flight.origin.code}} &gt; {{flight.destination.code}})</h2>
+    This flight leaves {{flight.departure_time|humanize_delta}}
+    and lands in {{flight.arrival_time|humanize_delta}}.
+</div>
 {% endfor %}
-</dl>
+{% endfor %}
+</div>
 {% endblock %}
