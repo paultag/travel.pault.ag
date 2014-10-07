@@ -5,26 +5,22 @@ import datetime as dt
 
 class Trip(models.Model):
     user = models.ForeignKey(User)
+    name = models.CharField(max_length=128)
     reason = models.TextField()
 
     @classmethod
     def get_active_trips(cls):
         now = dt.datetime.utcnow()
-        # Query on any flights arriving in the future
         return Trip.objects.filter(
             flights__arrival_time__gte=now
         )
 
-    @property
-    def get_legs(self):
-        yield from self.flights.all()
-
 
 class ServiceProvider(models.Model):
-    name = models.TextField()
-    rewards_account = models.TextField()
-    website = models.TextField()
-    phone_number = models.TextField()
+    name = models.CharField(max_length=128)
+    rewards_account = models.CharField(max_length=128)
+    website = models.URLField()
+    phone_number = models.CharField(max_length=32)
 
     def __str__(self):
         return "<ServiceProvider: {}>".format(self.name)
@@ -32,10 +28,10 @@ class ServiceProvider(models.Model):
 
 class Flight(models.Model):
     user = models.ForeignKey(User)
+    flight_number = models.CharField(max_length=128)
     departure_time = models.DateTimeField()
-    flight_number = models.TextField()
     arrival_time = models.DateTimeField()
-    carrier = models.ForeignKey(ServiceProvider)
+    carrier = models.ForeignKey(ServiceProvider, related_name="flights")
     trip = models.ForeignKey(Trip, related_name="flights")
 
     def __str__(self):
