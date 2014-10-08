@@ -24,4 +24,5 @@ def trip(request, trip):
     return render(request, "travel/public/trip.html", {
         "trip": trip,
         "flights": flights,
+        "user": trip.user,
     })
