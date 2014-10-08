@@ -2,7 +2,10 @@
 {% load humanize %}
 
 {% block content %}
-<h3>{{trip.name}} &mdash; {{user.first_name}} {{user.last_name}}</h3>
+<h3>
+    {{trip.name}} &mdash;
+    <a href="{% url 'trips' user.username %}" >{{user.first_name}} {{user.last_name}}</a>
+</h3>
 <p>{{trip.reason}}</p>
 
 <table class="table table-striped">
