@@ -15,3 +15,10 @@ def trips(request, user):
         "trips": trips,
         "user": user,
     })
+
+
+def trip(request, trip):
+    trip = Trip.objects.get(id=trip)
+    return render(request, "travel/public/trip.html", {
+        "trip": trip,
+    })

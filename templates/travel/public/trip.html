@@ -1,0 +1,13 @@
+{% extends "travel/base.html" %}
+{% load humanize %}
+
+{% block content %}
+{% for flight in trip.flights.all %}
+<div>
+    <h2>{{flight.carrier.name}} flight {{flight.flight_number}}
+        ({{flight.origin.code}} &gt; {{flight.destination.code}})</h2>
+    This flight leaves {{flight.departure_time|humanize_delta}}
+    and lands in {{flight.arrival_time|humanize_delta}}.
+</div>
+{% endfor %}
+{% endblock %}

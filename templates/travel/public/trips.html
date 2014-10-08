@@ -6,16 +6,8 @@
 <div>
 {{user.first_name}}'s trips.
 
-<h1>{{trip.name}}</h1>
+<h1><a href="{% url 'trip' trip.id %}">{{trip.name}}</a></h1>
 <p>{{trip.reason}}</p>
-{% for flight in trip.flights.all %}
-<div>
-    <h2>{{flight.carrier.name}} flight {{flight.flight_number}}
-        ({{flight.origin.code}} &gt; {{flight.destination.code}})</h2>
-    This flight leaves {{flight.departure_time|humanize_delta}}
-    and lands in {{flight.arrival_time|humanize_delta}}.
-</div>
-{% endfor %}
 {% endfor %}
 </div>
 {% endblock %}
