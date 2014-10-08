@@ -14,7 +14,7 @@ class Trip(models.Model):
         return Trip.objects.filter(
             flights__arrival_time__gte=now,
             **filters
-        )
+        ).distinct()
 
     def __str__(self):
         return "<Trip: {}>".format(self.name)
