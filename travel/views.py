@@ -19,6 +19,9 @@ def trips(request, user):
 
 def trip(request, trip):
     trip = Trip.objects.get(id=trip)
+    flights = trip.flights.all().order_by("departure_time")
+
     return render(request, "travel/public/trip.html", {
         "trip": trip,
+        "flights": flights,
     })

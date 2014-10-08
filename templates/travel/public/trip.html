@@ -16,7 +16,7 @@
         </tr>
     </thead>
     <tbody>
-{% for flight in trip.flights.all %}
+{% for flight in flights %}
         <tr>
             <td>{{flight.carrier.name}}</td>
             <td>{{flight.flight_number}}</td>
