@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 from django.contrib.auth.models import User
@@ -8,6 +9,7 @@ def home(request):
     return render(request, "travel/public/home.html")
 
 
+@login_required
 def trips(request, user):
     user = User.objects.get(username=user)
     trips = Trip.get_active_trips(user=user)
@@ -17,6 +19,7 @@ def trips(request, user):
     })
 
 
+@login_required
 def trip(request, trip):
     trip = Trip.objects.get(id=trip)
     flights = trip.flights.all().order_by("departure_time")
