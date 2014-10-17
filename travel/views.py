@@ -22,10 +22,10 @@ def trips(request, user):
 @login_required
 def trip(request, trip):
     trip = Trip.objects.get(id=trip)
-    flights = trip.flights.all().order_by("departure_time")
+    legs = trip.legs.all().order_by("departure_time")
 
     return render(request, "travel/public/trip.html", {
         "trip": trip,
-        "flights": flights,
+        "legs": legs,
         "user": trip.user,
     })

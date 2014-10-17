@@ -25,7 +25,7 @@
     <thead>
         <tr>
             <th>Carrier</th>
-            <th>Flight Number</th>
+            <th>Number</th>
             <th>Origin</th>
             <th>Departure</th>
             <th>Destination</th>
@@ -33,14 +33,14 @@
         </tr>
     </thead>
     <tbody>
-{% for flight in flights %}
+{% for leg in legs %}
         <tr>
-            <td>{{flight.carrier.name}}</td>
-            <td>{{flight.flight_number}}</td>
-            <td>{{flight.origin.code}}</td>
-            <td>{{flight.departure_time|humanize_delta}}</td>
-            <td>{{flight.destination.code}}</td>
-            <td>{{flight.arrival_time|humanize_delta}}</td>
+            <td>{{leg.carrier.name}}</td>
+            <td>{{leg.number}}</td>
+            <td>{{leg.origin.code}}</td>
+            <td>{{leg.departure_time|humanize_delta}}</td>
+            <td>{{leg.destination.code}}</td>
+            <td>{{leg.arrival_time|humanize_delta}}</td>
         </tr>
 {% endfor %}
     </tbody>
@@ -52,11 +52,11 @@ var map = L.mapbox.map('map', 'examples.map-i86nkdio').setView([
     39.50, -98.35
 ], 4);
 
-{% for flight in flights %}
+{% for leg in legs %}
 L.geoJson(new arc.GreatCircle(
-            {y: {{flight.origin.lat}}, x: {{flight.origin.lon}}},
-            {y: {{flight.destination.lat}}, x: {{flight.destination.lon}}},
-            {name: '{{flight.origin.code}} to {{flight.destination.code}}'}
+            {y: {{leg.origin.lat}}, x: {{leg.origin.lon}}},
+            {y: {{leg.destination.lat}}, x: {{leg.destination.lon}}},
+            {name: '{{leg.origin.code}} to {{leg.destination.code}}'}
 ).Arc(100, { offset: 10 }).json()).addTo(map);
 {% endfor %}
 
