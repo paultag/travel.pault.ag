@@ -8,6 +8,14 @@ class Trip(models.Model):
     name = models.CharField(max_length=128)
     reason = models.TextField()
 
+    def active_legs(self, **filters):
+        now = dt.datetime.utcnow()
+        return self.legs.filter(
+            arrival_time__gte=now,
+            departure_time__lte=now,
+            **filters
+        ).distinct()
+
     @classmethod
     def get_active_trips(cls, **filters):
         now = dt.datetime.utcnow()
@@ -37,7 +45,7 @@ class Stop(models.Model):
     lon = models.CharField(max_length=128)
 
     def __str__(self):
-        return "<Stop: {}>".format(self.code)
+        return "<Stop: {} ({})>".format(self.code, self.name)
 
 
 class Leg(models.Model):
@@ -48,6 +56,18 @@ class Leg(models.Model):
     arrival_time = models.DateTimeField()
     carrier = models.ForeignKey(ServiceProvider, related_name="legs")
     trip = models.ForeignKey(Trip, related_name="legs")
+
+    @property
+    def percent(self, **filters):
+        now = dt.datetime.now(dt.timezone.utc)
+
+        from_start = self.arrival_time - now
+        from_end = now - self.departure_time
+
+        total = from_start + from_end  # Total delta of the trip
+        finished = (total - from_start)
+
+        return ((finished.total_seconds() / total.total_seconds()) * 100)
 
     def __str__(self):
         return "<Leg: {} {} on {}>".format(

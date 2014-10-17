@@ -21,6 +21,14 @@
 </h3>
 <p>{{trip.reason}}</p>
 
+{% for leg in trip.active_legs %}
+<div class="progress">
+    <div class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="{{leg.percent}}" aria-valuemin="0" aria-valuemax="100" style="width: {{leg.percent}}%">
+        <span class="sr-only">{{leg.percent}}% Complete</span>
+    </div>
+</div>
+{% endfor %}
+
 <table class="table table-striped">
     <thead>
         <tr>
