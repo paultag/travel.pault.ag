@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 import datetime as dt
 
 
+
 class Trip(models.Model):
     user = models.ForeignKey(User)
     name = models.CharField(max_length=128)
@@ -48,6 +49,13 @@ class Stop(models.Model):
         return "<Stop: {} ({})>".format(self.code, self.name)
 
 
+LEG_TYPES = (
+    ('air', 'Airplane'),
+    ('train', 'Train'),
+    ('bus', 'Bus'),
+)
+
+
 class Leg(models.Model):
     number = models.CharField(max_length=128)
     origin = models.ForeignKey(Stop, related_name="inbound_legs")
@@ -56,6 +64,8 @@ class Leg(models.Model):
     arrival_time = models.DateTimeField()
     carrier = models.ForeignKey(ServiceProvider, related_name="legs")
     trip = models.ForeignKey(Trip, related_name="legs")
+    year_in_school = models.CharField(max_length=16, choices=LEG_TYPES)
+
 
     @property
     def percent(self, **filters):
