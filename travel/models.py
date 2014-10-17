@@ -64,7 +64,7 @@ class Leg(models.Model):
     arrival_time = models.DateTimeField()
     carrier = models.ForeignKey(ServiceProvider, related_name="legs")
     trip = models.ForeignKey(Trip, related_name="legs")
-    year_in_school = models.CharField(max_length=16, choices=LEG_TYPES)
+    type = models.CharField(max_length=16, choices=LEG_TYPES)
 
 
     @property
