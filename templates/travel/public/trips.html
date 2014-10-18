@@ -10,8 +10,8 @@
 <div>
     <div class="well">
         <h2><a href="{% url 'trip' trip.id %}">{{trip.name}}</a></h2>
-        {{trip.reason|markdown|safe}}
-        {{trip.start|humanize_delta}} to {{trip.end|humanize_delta}}
+        I'll be out of town from
+        {{trip.start|humanize_delta}} until {{trip.end|humanize_delta}}
     </div>
 </div>
 {% endfor %}

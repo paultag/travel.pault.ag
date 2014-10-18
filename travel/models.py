@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import datetime as dt
-
+import pytz
 
 
 class Trip(models.Model):
@@ -47,12 +47,15 @@ class ServiceProvider(models.Model):
     def __str__(self):
         return "<ServiceProvider: {}>".format(self.name)
 
+TIMEZONES = list(zip(pytz.all_timezones, pytz.all_timezones))
+
 
 class Stop(models.Model):
     name = models.CharField(max_length=128)
     code = models.CharField(max_length=16)
     lat = models.CharField(max_length=128)
     lon = models.CharField(max_length=128)
+    time_zone = models.CharField(max_length=100, choices=TIMEZONES)
 
     def __str__(self):
         return "<Stop: {} ({})>".format(self.code, self.name)
@@ -74,7 +77,6 @@ class Leg(models.Model):
     carrier = models.ForeignKey(ServiceProvider, related_name="legs")
     trip = models.ForeignKey(Trip, related_name="legs")
     type = models.CharField(max_length=16, choices=LEG_TYPES)
-
 
     @property
     def percent(self, **filters):
