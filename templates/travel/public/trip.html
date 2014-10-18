@@ -37,11 +37,6 @@
 </table>
 </div>
 
-<div class='well' >
-    <h3>Why</h3>
-    {{trip.reason|markdown|safe}}
-</div>
-
 {% for leg in trip.active_legs %}
 <div class='well' >
     <h3>{{leg.carrier.name}} {{leg.number}} ({{leg.origin.code}} to {{leg.destination.code}})</h3>
@@ -52,6 +47,11 @@
 </div>
 </div>
 {% endfor %}
+
+<div class='well' >
+    <h3>Why</h3>
+    {{trip.reason|markdown|safe}}
+</div>
 
 <div class='well' >
     <h3>Itinerary</h3>
