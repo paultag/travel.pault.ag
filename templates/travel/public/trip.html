@@ -16,11 +16,29 @@
 {% endblock %}
 
 {% block content %}
+
 <h3>
     {{trip.name}} &mdash;
     <a href="{% url 'trips' user.username %}" >{{user.first_name}} {{user.last_name}}</a>
 </h3>
+
 <div class='well' >
+<h3>Overview</h3>
+
+<table class="table table-striped">
+    <tr>
+        <td>Leaving</td>
+        <td>{{trip.start}}</td>
+    </tr>
+    <tr>
+        <td>Returning</td>
+        <td>{{trip.end}}</td>
+    </tr>
+</table>
+</div>
+
+<div class='well' >
+    <h3>Why</h3>
     {{trip.reason|markdown|safe}}
 </div>
 
