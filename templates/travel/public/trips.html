@@ -1,13 +1,18 @@
 {% extends "travel/base.html" %}
 {% load humanize %}
+{% load markdown %}
 
 {% block content %}
-{% for trip in trips %}
-<div>
-    <h1>Upcoming Trips</h1>
 
-    <h2><a href="{% url 'trip' trip.id %}">{{trip.name}}</a></h2>
-    <p>{{trip.reason}}</p>
+<h1>Active Trips</h1>
+
+{% for trip in active_trips %}
+<div>
+    <div class="well">
+        <h2><a href="{% url 'trip' trip.id %}">{{trip.name}}</a></h2>
+        {{trip.reason|markdown|safe}}
+        {{trip.start|humanize_delta}} to {{trip.end|humanize_delta}}
+    </div>
 </div>
 {% endfor %}
 {% endblock %}

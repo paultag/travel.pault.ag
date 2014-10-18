@@ -1,5 +1,6 @@
 {% extends "travel/base.html" %}
 {% load humanize %}
+{% load markdown %}
 
 {% block head %}
 <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
@@ -19,7 +20,9 @@
     {{trip.name}} &mdash;
     <a href="{% url 'trips' user.username %}" >{{user.first_name}} {{user.last_name}}</a>
 </h3>
-<p>{{trip.reason}}</p>
+<div class='well' >
+    {{trip.reason|markdown|safe}}
+</div>
 
 {% for leg in trip.active_legs %}
 <div class='well' >
@@ -75,6 +78,4 @@ L.geoJson(new arc.GreatCircle(
 {% endfor %}
 
 </script>
-
-
 {% endblock %}

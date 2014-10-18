@@ -12,9 +12,9 @@ def home(request):
 @login_required
 def trips(request, user):
     user = User.objects.get(username=user)
-    trips = Trip.get_active_trips(user=user)
+    active_trips = Trip.active_trips(user=user)
     return render(request, "travel/public/trips.html", {
-        "trips": trips,
+        "active_trips": active_trips,
         "user": user,
     })
 

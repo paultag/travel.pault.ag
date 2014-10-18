@@ -18,12 +18,21 @@ class Trip(models.Model):
         ).distinct()
 
     @classmethod
-    def get_active_trips(cls, **filters):
+    def active_trips(cls, **filters):
         now = dt.datetime.utcnow()
         return Trip.objects.filter(
             legs__arrival_time__gte=now,
+            legs__departure_time__lte=now,
             **filters
         ).distinct()
+
+    @property
+    def start(self):
+        return self.legs.order_by("departure_time").first().departure_time
+
+    @property
+    def end(self):
+        return self.legs.order_by("-arrival_time").first().arrival_time
 
     def __str__(self):
         return "<Trip: {}>".format(self.name)
