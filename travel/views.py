@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from django.conf import settings
 
 from django.contrib.auth.models import User
 from .models import Trip
@@ -28,4 +29,5 @@ def trip(request, trip):
         "trip": trip,
         "legs": legs,
         "user": trip.user,
+        "settings": settings,
     })

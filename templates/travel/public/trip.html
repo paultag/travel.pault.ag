@@ -5,11 +5,11 @@
 
 {% block head %}
 <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-<!--
+{% if settings.ENABLE_MAPBOX %}
 <script src='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
 <link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css' rel='stylesheet' />
 <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/arc.js/v0.1.0/arc.js'></script>
--->
+{% endif %}
 <style>
     #map {
         width:100%;
@@ -95,13 +95,12 @@
     </tbody>
 </table>
 </div>
-<!--
+{% if settings.ENABLE_MAPBOX %}
 <div id='map'></div>
 <script>
 var map = L.mapbox.map('map', 'examples.map-i86nkdio').setView([
     39.50, -98.35
 ], 4);
-
 {% for leg in legs %}
 L.geoJson(new arc.GreatCircle(
             {y: {{leg.origin.lat}}, x: {{leg.origin.lon}}},
@@ -109,7 +108,6 @@ L.geoJson(new arc.GreatCircle(
             {name: '{{leg.origin.code}} to {{leg.destination.code}}'}
 ).Arc(100, { offset: 10 }).json()).addTo(map);
 {% endfor %}
-
 </script>
--->
+{% endif %}
 {% endblock %}
