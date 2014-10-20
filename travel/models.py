@@ -34,6 +34,18 @@ class Trip(models.Model):
     def end(self):
         return self.legs.order_by("-arrival_time").first().arrival
 
+    def to_dict(self):
+        return {
+            "user": self.user.username,
+            "name": self.name,
+            "reason": self.reason,
+            "start": self.start,
+            "end": self.end,
+            "active_legs": [x.to_dict() for x in self.active_legs()],
+            "legs": [x.to_dict() for x in
+                     self.legs.all().order_by("departure_time")],
+        }
+
     def __str__(self):
         return "<Trip: {}>".format(self.name)
 
@@ -43,6 +55,11 @@ class ServiceProvider(models.Model):
     rewards_account = models.CharField(max_length=128)
     website = models.URLField()
     phone_number = models.CharField(max_length=32)
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+        }
 
     def __str__(self):
         return "<ServiceProvider: {}>".format(self.name)
@@ -56,6 +73,15 @@ class Stop(models.Model):
     lat = models.CharField(max_length=128)
     lon = models.CharField(max_length=128)
     time_zone = models.CharField(max_length=100, choices=TIMEZONES)
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "code": self.code,
+            "lat": self.lat,
+            "lon": self.lon,
+            "time_zone": self.time_zone,
+        }
 
     def __str__(self):
         return "<Stop: {} ({})>".format(self.code, self.name)
@@ -78,10 +104,33 @@ class Leg(models.Model):
     trip = models.ForeignKey(Trip, related_name="legs")
     type = models.CharField(max_length=16, choices=LEG_TYPES)
 
+    def to_dict(self):
+        ret = {
+            "number": self.number,
+            "origin": self.origin.to_dict(),
+            "destination": self.destination.to_dict(),
+            "departure_time": self.departure,
+            "arrival_time": self.arrival,
+            "carrier": self.carrier.to_dict(),
+            "length": self.length,
+            "percent": None,
+            "type": self.type,
+        }
+
+        if self.active:
+            ret["percent"] = self.percent
+
+        return ret
+
     @property
     def complete(self, **filters):
         now = dt.datetime.now(dt.timezone.utc)
         return now >= self.arrival_time
+
+    @property
+    def active(self):
+        now = dt.datetime.now(dt.timezone.utc)
+        return (now <= self.arrival_time and now >= self.departure_time)
 
     @property
     def arrival(self):
