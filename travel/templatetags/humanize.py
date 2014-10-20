@@ -2,6 +2,7 @@ from django import template
 
 import datetime as dt
 import humanize
+import humanize.time
 
 register = template.Library()
 
@@ -10,6 +11,11 @@ register = template.Library()
 def humanize_delta(value):
     return humanize.naturaltime(
         dt.datetime.now(dt.timezone.utc) - value)
+
+
+@register.filter(name='humanize_timedelta')
+def humanize_delta(value):
+    return humanize.time.naturaldelta(value)
 
 
 @register.filter(name='humanize_date')

@@ -95,7 +95,7 @@ class Leg(models.Model):
 
     @property
     def length(self):
-        return self.departure - self.arrival
+        return self.arrival - self.departure
 
     @property
     def percent(self, **filters):

@@ -74,6 +74,7 @@
             <th>Departure</th>
             <th>Destination</th>
             <th>Arrival</th>
+            <th>Length</th>
         </tr>
     </thead>
     <tbody>
@@ -88,6 +89,7 @@
             <td>{{leg.departure_time|humanize_delta}}</td>
             <td>{{leg.destination.code}}</td>
             <td>{{leg.arrival_time|humanize_delta}}</td>
+            <td>{{leg.length|humanize_timedelta}}</td>
         </tr>
 {% endfor %}
     </tbody>
