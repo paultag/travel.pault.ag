@@ -28,11 +28,11 @@ class Trip(models.Model):
 
     @property
     def start(self):
-        return self.legs.order_by("departure_time").first().departure_time
+        return self.legs.order_by("departure_time").first().departure
 
     @property
     def end(self):
-        return self.legs.order_by("-arrival_time").first().arrival_time
+        return self.legs.order_by("-arrival_time").first().arrival
 
     def __str__(self):
         return "<Trip: {}>".format(self.name)
@@ -82,6 +82,20 @@ class Leg(models.Model):
     def complete(self, **filters):
         now = dt.datetime.now(dt.timezone.utc)
         return now >= self.arrival_time
+
+    @property
+    def arrival(self):
+        return self.arrival_time.astimezone(
+            pytz.timezone(self.destination.time_zone))
+
+    @property
+    def departure(self):
+        return self.departure_time.astimezone(
+            pytz.timezone(self.origin.time_zone))
+
+    @property
+    def length(self):
+        return self.departure - self.arrival
 
     @property
     def percent(self, **filters):

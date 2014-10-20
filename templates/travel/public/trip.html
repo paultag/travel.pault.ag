@@ -2,6 +2,7 @@
 {% load humanize %}
 {% load markdown %}
 
+
 {% block head %}
 <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 <!--
@@ -36,11 +37,11 @@
 <table class="table table-striped">
     <tr>
         <td>Leaving</td>
-        <td>{{trip.start}}</td>
+        <td>{{trip.start|humanize_date}}</td>
     </tr>
     <tr>
         <td>Returning</td>
-        <td>{{trip.end}}</td>
+        <td>{{trip.end|humanize_date}}</td>
     </tr>
 </table>
 </div>
