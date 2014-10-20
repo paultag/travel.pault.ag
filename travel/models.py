@@ -79,6 +79,11 @@ class Leg(models.Model):
     type = models.CharField(max_length=16, choices=LEG_TYPES)
 
     @property
+    def complete(self, **filters):
+        now = dt.datetime.now(dt.timezone.utc)
+        return now >= self.arrival_time
+
+    @property
     def percent(self, **filters):
         now = dt.datetime.now(dt.timezone.utc)
 
