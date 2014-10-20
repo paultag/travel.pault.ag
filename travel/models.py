@@ -59,6 +59,8 @@ class ServiceProvider(models.Model):
     def to_dict(self):
         return {
             "name": self.name,
+            "website": self.website,
+            "phone": self.phone_number,
         }
 
     def __str__(self):
