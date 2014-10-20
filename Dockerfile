@@ -6,6 +6,7 @@ ENV LANG en_US.UTF-8
 RUN apt-get update && apt-get install -y \
     python3.4 python3-pip \
     git \
+    python3-psycopg2 \
     uwsgi-plugin-python3
 
 RUN mkdir -p /opt/pault.ag/
