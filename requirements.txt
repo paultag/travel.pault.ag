@@ -3,3 +3,4 @@ humanize
 Markdown
 pytz
 dj_database_url
+dj-static
