@@ -33,6 +33,15 @@ def home(request):
 def trips(request, user):
     user = User.objects.get(username=user)
     active_trips = Trip.active_trips(user=user)
+
+    if request.META['HTTP_ACCEPT'].startswith("application/json"):
+        return _wrap(
+            {
+                "user": user.username,
+                "active_trips": [x.to_dict() for x in active_trips]
+            }
+        )
+
     return render(request, "travel/public/trips.html", {
         "active_trips": active_trips,
         "user": user,
