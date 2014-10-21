@@ -1,10 +1,14 @@
 import os
 import dj_database_url
+
+OPTION = lambda x, d: os.environ.get(x, d).lower() == "true"
+
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = os.environ.get("SECRET_KEY", "")
-DEBUG = True
-TEMPLATE_DEBUG = True
-ALLOWED_HOSTS = []
+DEBUG = OPTION("DJANGO_DEBUG", "True")
+TEMPLATE_DEBUG = OPTION("DJANGO_DEBUG", "True")
+ALLOWED_HOSTS = ['travel.pault.ag', 'localhost']
 TEMPLATE_DIRS = [
     os.path.join(BASE_DIR, "templates")
 ]
@@ -48,5 +52,5 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 STATIC_URL = '/static/'
-STATIC_ROOT = 'static'
-ENABLE_MAPBOX = os.environ.get("TRAVEL_ENABLE_MAPBOX", "True").lower() == "true"
+STATIC_ROOT = '/static/'
+ENABLE_MAPBOX = OPTION("TRAVEL_ENABLE_MAPBOX", "True")
