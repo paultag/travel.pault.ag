@@ -20,9 +20,10 @@ class Trip(models.Model):
     @classmethod
     def active_trips(cls, **filters):
         now = dt.datetime.utcnow()
+        delta = dt.timedelta(weeks=1)
         return Trip.objects.filter(
-            legs__arrival_time__gte=now,
-            legs__departure_time__lte=now,
+            legs__departure_time__lte=(now + delta),
+            legs__arrival_time__gte=(now - delta),
             **filters
         ).distinct()
 
