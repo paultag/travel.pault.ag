@@ -34,6 +34,7 @@
 <div class='well' >
 <h3>Overview</h3>
 
+<div class="table-responsive" >
 <table class="table table-striped">
     <tr>
         <td>Leaving</td>
@@ -44,6 +45,7 @@
         <td>{{trip.end|humanize_date}}</td>
     </tr>
 </table>
+</div>
 </div>
 
 {% for leg in trip.active_legs %}
@@ -64,6 +66,7 @@
 
 <div class='well' >
     <h3>Itinerary</h3>
+<div class="table-responsive" >
 <table class="table table-striped">
     <thead>
         <tr>
@@ -94,6 +97,7 @@
 {% endfor %}
     </tbody>
 </table>
+</div>
 </div>
 {% if settings.ENABLE_MAPBOX %}
 <div id='map'></div>
