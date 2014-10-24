@@ -91,6 +91,38 @@ class Stop(models.Model):
         return "<Stop: {} ({})>".format(self.code, self.name)
 
 
+class Place(models.Model):
+    name = models.CharField(max_length=128)
+    photo = models.URLField()
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "photo": self.photo,
+        }
+
+    def __str__(self):
+        return "<Place: {}>".format(self.name)
+
+
+class Lodging(models.Model):
+    name = models.CharField(max_length=128)
+    rewards_account = models.CharField(max_length=128)
+    website = models.URLField()
+    phone_number = models.CharField(max_length=32)
+    lat = models.CharField(max_length=128)
+    lon = models.CharField(max_length=128)
+    address = models.TextField(max_length=128)
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+        }
+
+    def __str__(self):
+        return "<Lodging: {}>".format(self.name)
+
+
 LEG_TYPES = (
     ('air', 'Airplane'),
     ('train', 'Train'),

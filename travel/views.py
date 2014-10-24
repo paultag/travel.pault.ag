@@ -61,3 +61,8 @@ def trip(request, trip):
         "user": trip.user,
         "settings": settings,
     })
+
+
+def where(request, user):
+    user = User.objects.get(username=user)
+    raise ValueError
