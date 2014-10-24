@@ -37,6 +37,7 @@ class Trip(models.Model):
 
     def to_dict(self):
         return {
+            "id": self.id,
             "user": self.user.username,
             "name": self.name,
             "reason": self.reason,
