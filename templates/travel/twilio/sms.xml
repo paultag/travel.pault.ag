@@ -1,0 +1,5 @@
+{% extends "travel/twilio/base.xml" %}
+
+{% block response %}
+    <Sms>{{message}}</Sms>
+{% endblock %}

@@ -66,6 +66,15 @@ class Place(models.Model):
     name = models.CharField(max_length=128)
     photo = models.URLField()
 
+    @classmethod
+    def locate_user(cls, user):
+        stay = Stay.active_stays(user=user).order_by(
+            "checkin_time").first()
+        if stay is not None:
+            return stay.place
+        return  User.home.get_queryset().first().place
+
+
     def __str__(self):
         return "<Place: {}>".format(self.name)
 

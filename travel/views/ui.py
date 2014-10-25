@@ -4,10 +4,9 @@ import datetime as dt
 import pytz
 
 from django.contrib.auth.models import User
-from .models import Trip, Stay
-from .helpers import TravelView
-
-from .specs import TRIP_SPEC
+from ..models import Trip, Stay
+from ..helpers import TravelView
+from ..specs import TRIP_SPEC
 
 
 def home(request):
