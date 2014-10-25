@@ -4,8 +4,6 @@
 {% block title %}Where!{% endblock %}
 
 {% block content %}
-
-{% if place %}
 <style>
 body {
     width:            100%;
@@ -20,14 +18,16 @@ body {
     text-align:       center;
 }
 </style>
-{% endif %}
-
 
 <div id="where">
     <h1>{{place.name}}</h1>
-    </h2>
+    {% if trip %}
+    <h2>
         Leaving {{trip.end|humanize_delta}}
     </h2>
+    {% else %}
+    <h2>Home, sweet home.</h2>
+    {% endif %}
 </div>
 
 {% endblock %}

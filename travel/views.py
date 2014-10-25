@@ -55,12 +55,15 @@ def trip(request, trip):
 def where(request, user):
     user = User.objects.get(username=user)
     active_stay = Stay.active_stays(user=user).order_by("checkin_time").first()
+    if active_stay is None:
+        active_place = User.home.get_queryset().first().place
+        active_trip = None
+    else:
+        active_place = active_stay.lodging.place
+        active_trip = active_stay.trip
 
     return render(request, "travel/public/where.html", {
         "user": user,
-        "stay": active_stay,
-        "trip": active_stay.trip,
-        "lodging": active_stay.lodging if active_stay else None,
-        "place": active_stay.lodging.place if active_stay else None,
-        "settings": settings,
+        "trip": active_trip,
+        "place": active_place,
     })

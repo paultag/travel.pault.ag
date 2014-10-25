@@ -92,6 +92,14 @@ class Lodging(models.Model):
         return "<Lodging: {}>".format(self.name)
 
 
+class Home(models.Model):
+    user = models.OneToOneField(User, related_name="home")
+    place = models.ForeignKey(Place, related_name="homes")
+
+    def __str__(self):
+        return "<Home: {}>".format(self.user.username)
+
+
 class Stay(models.Model):
     lodging = models.ForeignKey(Lodging, related_name="stays")
     checkout_time = models.DateTimeField()
