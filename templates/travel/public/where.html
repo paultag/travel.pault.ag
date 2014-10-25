@@ -1,0 +1,33 @@
+{% extends "travel/base.html" %}
+{% load humanize %}
+
+{% block title %}Where!{% endblock %}
+
+{% block content %}
+
+{% if place %}
+<style>
+body {
+    width:            100%;
+    height:           100%;
+    background:       url({{place.photo}}) no-repeat center center fixed;
+    background-size:  cover;
+}
+#where {
+    margin-top:       50%;
+    width:            100%;
+    color:            #FFFFFF;
+    text-align:       center;
+}
+</style>
+{% endif %}
+
+
+<div id="where">
+    <h1>{{place.name}}</h1>
+    </h2>
+        Leaving {{trip.end|humanize_delta}}
+    </h2>
+</div>
+
+{% endblock %}

@@ -7,7 +7,7 @@ import pytz
 import json
 
 from django.contrib.auth.models import User
-from .models import Trip
+from .models import Trip, Stay
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -55,14 +55,28 @@ def trip(request, trip):
         return _wrap(trip.to_dict())
 
     legs = trip.legs.all().order_by("departure_time")
+    stays = trip.stays.all().order_by("checkin_time")
     return render(request, "travel/public/trip.html", {
         "trip": trip,
         "legs": legs,
         "user": trip.user,
+        "stays": stays,
         "settings": settings,
     })
 
 
 def where(request, user):
     user = User.objects.get(username=user)
-    raise ValueError
+    active_stay = Stay.active_stays(user=user).order_by("checkin_time").first()
+
+    if request.META['HTTP_ACCEPT'].startswith("application/json"):
+        return _wrap(active_stay.to_dict())
+
+    return render(request, "travel/public/where.html", {
+        "user": user,
+        "stay": active_stay,
+        "trip": active_stay.trip,
+        "lodging": active_stay.lodging if active_stay else None,
+        "place": active_stay.lodging.place if active_stay else None,
+        "settings": settings,
+    })

@@ -20,4 +20,4 @@ def humanize_delta(value):
 
 @register.filter(name='humanize_date')
 def humanize_delta(value):
-    return dt.datetime.strftime(value, "%A, %b %d, %Y, %I:%M %p %Z")
+    return dt.datetime.strftime(value, "%a, %b %d, %Y, %I:%M %p %Z")

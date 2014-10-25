@@ -44,6 +44,7 @@ class Trip(models.Model):
             "start": self.start,
             "end": self.end,
             "active_legs": [x.to_dict() for x in self.active_legs()],
+            "stays": [x.to_dict() for x in self.stays.all().order_by("checkin_time")],
             "legs": [x.to_dict() for x in
                      self.legs.all().order_by("departure_time")],
         }
@@ -105,6 +106,12 @@ class Place(models.Model):
         return "<Place: {}>".format(self.name)
 
 
+LODGING_TYPES = (
+    ('hotel', 'Hotel'),
+    ('house', 'House'),
+)
+
+
 class Lodging(models.Model):
     name = models.CharField(max_length=128)
     rewards_account = models.CharField(max_length=128)
@@ -113,14 +120,69 @@ class Lodging(models.Model):
     lat = models.CharField(max_length=128)
     lon = models.CharField(max_length=128)
     address = models.TextField(max_length=128)
+    place = models.ForeignKey(Place, related_name="lodgings")
+    time_zone = models.CharField(max_length=100, choices=TIMEZONES)
+    type = models.CharField(max_length=16, choices=LODGING_TYPES)
 
     def to_dict(self):
         return {
             "name": self.name,
+            "website": self.website,
+            "phone_number": self.phone_number,
+            "lat": self.lat,
+            "lon": self.lon,
+            "address": self.address,
+            "time_zone": self.time_zone,
+            "type": self.type,
         }
 
     def __str__(self):
         return "<Lodging: {}>".format(self.name)
+
+
+class Stay(models.Model):
+    lodging = models.ForeignKey(Lodging, related_name="stays")
+    checkout_time = models.DateTimeField()
+    checkin_time = models.DateTimeField()
+    trip = models.ForeignKey(Trip, related_name="stays")
+    user = models.ForeignKey(User)
+
+    @property
+    def complete(self, **filters):
+        now = dt.datetime.now(dt.timezone.utc)
+        return now >= self.checkout_time
+
+    @property
+    def checkin(self):
+        return self.checkin_time.astimezone(
+            pytz.timezone(self.lodging.time_zone))
+
+    @property
+    def checkout(self):
+        return self.checkout_time.astimezone(
+            pytz.timezone(self.lodging.time_zone))
+
+    @classmethod
+    def active_stays(cls, **filters):
+        now = dt.datetime.utcnow()
+        return Stay.objects.filter(
+            checkin_time__lte=now,
+            checkout_time__gte=now,
+            **filters
+        ).distinct()
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user": self.user.username,
+            "lodging": self.lodging.to_dict(),
+            "checkin": self.checkin,
+            "checkout": self.checkout,
+            "complete": self.complete,
+        }
+
+    def __str__(self):
+        return "<Stay: {} at {}>".format(self.checkin, self.lodging.name)
 
 
 LEG_TYPES = (
@@ -150,6 +212,7 @@ class Leg(models.Model):
             "carrier": self.carrier.to_dict(),
             "length": self.length,
             "percent": None,
+            "complete": self.complete,
             "type": self.type,
         }
 

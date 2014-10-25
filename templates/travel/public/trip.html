@@ -2,6 +2,7 @@
 {% load humanize %}
 {% load markdown %}
 
+{% block title %}Trip Details{% endblock %}
 
 {% block head %}
 <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
@@ -89,9 +90,9 @@
             <td>{{leg.carrier.name}}</td>
             <td>{{leg.number}}</td>
             <td>{{leg.origin.code}}</td>
-            <td>{{leg.departure_time|humanize_delta}}</td>
+            <td>{{leg.departure|humanize_date}} <small>({{leg.departure_time|humanize_delta}})</small></td>
             <td>{{leg.destination.code}}</td>
-            <td>{{leg.arrival_time|humanize_delta}}</td>
+            <td>{{leg.arrival|humanize_date}} <small>({{leg.arrival_time|humanize_delta}})</small></td>
             <td>{{leg.length|humanize_timedelta}}</td>
         </tr>
 {% endfor %}
@@ -99,6 +100,37 @@
 </table>
 </div>
 </div>
+
+
+<div class='well' >
+    <h3>Lodging</h3>
+<div class="table-responsive" >
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <td></td>
+            <th>Where</th>
+            <th>Check In</th>
+            <th>Check Out</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for stay in stays %}
+    <tr {% if stay.complete %}class='complete'{% endif %}>
+            <td>
+<i class="fa fa-{% if stay.lodging.type == "house" %}home{% elif stay.lodging.type == "hotel" %}briefcase{% else %}building{% endif %} fa-2x"></i>
+            </td>
+            <td>{{stay.lodging.name}}</td>
+            <td>{{stay.checkin|humanize_date}} <small>({{stay.checkin|humanize_delta}})</small></td>
+            <td>{{stay.checkout|humanize_date}} <small>({{stay.checkout|humanize_delta}})</small></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+
+
 {% if settings.ENABLE_MAPBOX %}
 <div id='map'></div>
 <script>
@@ -111,6 +143,25 @@ L.geoJson(new arc.GreatCircle(
             {y: {{leg.destination.lat}}, x: {{leg.destination.lon}}},
             {name: '{{leg.origin.code}} to {{leg.destination.code}}'}
 ).Arc(100, { offset: 10 }).json()).addTo(map);
+{% endfor %}
+{% for stay in stays %}
+L.mapbox.featureLayer({
+    type: 'Feature',
+    geometry: {
+        type: 'Point',
+        coordinates: [
+            {{stay.lodging.lon}},
+            {{stay.lodging.lat}},
+        ]
+    },
+    properties: {
+        title: "{{stay.lodging.name}}",
+        description: '{{stay.lodging.address}}',
+        'marker-size': 'large',
+        'marker-color': '#285E77',
+        'marker-symbol': 'star-stroked'
+    }
+}).addTo(map);
 {% endfor %}
 </script>
 {% endif %}
