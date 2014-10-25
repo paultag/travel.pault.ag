@@ -71,7 +71,7 @@ class Place(models.Model):
         stay = Stay.active_stays(user=user).order_by(
             "checkin_time").first()
         if stay is not None:
-            return stay.place
+            return stay.lodging.place
         return  User.home.get_queryset().first().place
 
 
