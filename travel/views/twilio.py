@@ -28,8 +28,6 @@ VERBS = {
 @csrf_exempt
 def query(request):
     inquery = request.POST.get('Message', "").strip().lower()
-
     if inquery in VERBS:
         return VERBS[inquery](request, inquery)
-
     return text(request, "Hello, World")

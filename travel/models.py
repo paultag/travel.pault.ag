@@ -203,3 +203,14 @@ class Leg(models.Model):
             self.number,
             self.departure_time
         )
+
+
+class TwilioNumber(models.Model):
+    user = models.ForeignKey(User)
+    sid = models.CharField(max_length=128)
+    number = models.CharField(max_length=128)
+
+    def __str__(self):
+        return "<TwilioNumber: {}>".format(
+            self.number,
+        )
