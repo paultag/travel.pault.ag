@@ -1,6 +1,7 @@
-from django.views.generic import View
-
 from django.http import HttpResponse
+from django.views.generic import View
+from restless.models import serialize
+
 import datetime as dt
 import json
 
@@ -17,20 +18,11 @@ class JSONEncoder(json.JSONEncoder):
         return super(JSONEncoder, self).default(obj, **kwargs)
 
 
-def _wrap(data):
-    return HttpResponse(json.dumps(data, cls=JSONEncoder))
-
-
-
-def userview(fn):
-    def _(*args, user, **kwargs):
-        user = User.objects.get(username=user)
-        return fn(*args, user=user, **kwargs)
-    return _
 
 
 class TravelView(View):
     http_method_names = ['get']  # HEAD soon?
+    PUBLIC_SCHEMA = {}
 
     def lookup(self, *args, **kwargs):
         raise NotImplementedError("`lookup` method not implemented")
@@ -39,4 +31,8 @@ class TravelView(View):
         raise NotImplementedError("`render` method not implemented")
 
     def get(self, request, *args, **kwargs):
+        if request.META['HTTP_ACCEPT'] == "application/json":
+            return HttpResponse(json.dumps(serialize(
+                    self.lookup(*args, **kwargs), **self.PUBLIC_SCHEMA),
+                cls=JSONEncoder))
         return self.render(request, self.lookup(*args, **kwargs))
