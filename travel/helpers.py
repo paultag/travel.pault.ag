@@ -31,7 +31,7 @@ class TravelView(View):
         raise NotImplementedError("`render` method not implemented")
 
     def get(self, request, *args, **kwargs):
-        if request.META['HTTP_ACCEPT'] == "application/json":
+        if request.META['HTTP_ACCEPT'].startswith("application/json"):
             return HttpResponse(json.dumps(serialize(
                     self.lookup(*args, **kwargs), **self.PUBLIC_SCHEMA),
                 cls=JSONEncoder))
