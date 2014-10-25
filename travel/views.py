@@ -32,16 +32,7 @@ def home(request):
 
 def trips(request, user):
     user = User.objects.get(username=user)
-    active_trips = Trip.active_trips(user=user)
-
-    if request.META['HTTP_ACCEPT'].startswith("application/json"):
-        return _wrap(
-            {
-                "user": user.username,
-                "active_trips": [x.to_dict() for x in active_trips]
-            }
-        )
-
+    active_trips = Trip.get_active_trips(user=user)
     return render(request, "travel/public/trips.html", {
         "active_trips": active_trips,
         "user": user,
@@ -50,10 +41,6 @@ def trips(request, user):
 
 def trip(request, trip):
     trip = Trip.objects.get(id=trip)
-
-    if request.META['HTTP_ACCEPT'].startswith("application/json"):
-        return _wrap(trip.to_dict())
-
     legs = trip.legs.all().order_by("departure_time")
     stays = trip.stays.all().order_by("checkin_time")
     return render(request, "travel/public/trip.html", {
@@ -68,9 +55,6 @@ def trip(request, trip):
 def where(request, user):
     user = User.objects.get(username=user)
     active_stay = Stay.active_stays(user=user).order_by("checkin_time").first()
-
-    if request.META['HTTP_ACCEPT'].startswith("application/json"):
-        return _wrap(active_stay.to_dict())
 
     return render(request, "travel/public/where.html", {
         "user": user,

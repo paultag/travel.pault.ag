@@ -49,7 +49,7 @@
 </div>
 </div>
 
-{% for leg in trip.active_legs %}
+{% for leg in trip.get_active_legs %}
 <div class='well' >
     <h3>{{leg.carrier.name}} {{leg.number}} ({{leg.origin.code}} to {{leg.destination.code}})</h3>
 <div class="progress">

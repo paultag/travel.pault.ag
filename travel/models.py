@@ -9,7 +9,7 @@ class Trip(models.Model):
     name = models.CharField(max_length=128)
     reason = models.TextField()
 
-    def active_legs(self, **filters):
+    def get_active_legs(self, **filters):
         now = dt.datetime.utcnow()
         return self.legs.filter(
             arrival_time__gte=now,
@@ -18,7 +18,7 @@ class Trip(models.Model):
         ).distinct()
 
     @classmethod
-    def active_trips(cls, **filters):
+    def get_active_trips(cls, **filters):
         now = dt.datetime.utcnow()
         delta = dt.timedelta(weeks=1)
         return Trip.objects.filter(
@@ -35,20 +35,6 @@ class Trip(models.Model):
     def end(self):
         return self.legs.order_by("-arrival_time").first().arrival
 
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "user": self.user.username,
-            "name": self.name,
-            "reason": self.reason,
-            "start": self.start,
-            "end": self.end,
-            "active_legs": [x.to_dict() for x in self.active_legs()],
-            "stays": [x.to_dict() for x in self.stays.all().order_by("checkin_time")],
-            "legs": [x.to_dict() for x in
-                     self.legs.all().order_by("departure_time")],
-        }
-
     def __str__(self):
         return "<Trip: {}>".format(self.name)
 
@@ -58,13 +44,6 @@ class ServiceProvider(models.Model):
     rewards_account = models.CharField(max_length=128)
     website = models.URLField()
     phone_number = models.CharField(max_length=32)
-
-    def to_dict(self):
-        return {
-            "name": self.name,
-            "website": self.website,
-            "phone": self.phone_number,
-        }
 
     def __str__(self):
         return "<ServiceProvider: {}>".format(self.name)
@@ -79,15 +58,6 @@ class Stop(models.Model):
     lon = models.CharField(max_length=128)
     time_zone = models.CharField(max_length=100, choices=TIMEZONES)
 
-    def to_dict(self):
-        return {
-            "name": self.name,
-            "code": self.code,
-            "lat": self.lat,
-            "lon": self.lon,
-            "time_zone": self.time_zone,
-        }
-
     def __str__(self):
         return "<Stop: {} ({})>".format(self.code, self.name)
 
@@ -95,12 +65,6 @@ class Stop(models.Model):
 class Place(models.Model):
     name = models.CharField(max_length=128)
     photo = models.URLField()
-
-    def to_dict(self):
-        return {
-            "name": self.name,
-            "photo": self.photo,
-        }
 
     def __str__(self):
         return "<Place: {}>".format(self.name)
@@ -123,18 +87,6 @@ class Lodging(models.Model):
     place = models.ForeignKey(Place, related_name="lodgings")
     time_zone = models.CharField(max_length=100, choices=TIMEZONES)
     type = models.CharField(max_length=16, choices=LODGING_TYPES)
-
-    def to_dict(self):
-        return {
-            "name": self.name,
-            "website": self.website,
-            "phone_number": self.phone_number,
-            "lat": self.lat,
-            "lon": self.lon,
-            "address": self.address,
-            "time_zone": self.time_zone,
-            "type": self.type,
-        }
 
     def __str__(self):
         return "<Lodging: {}>".format(self.name)
@@ -171,16 +123,6 @@ class Stay(models.Model):
             **filters
         ).distinct()
 
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "user": self.user.username,
-            "lodging": self.lodging.to_dict(),
-            "checkin": self.checkin,
-            "checkout": self.checkout,
-            "complete": self.complete,
-        }
-
     def __str__(self):
         return "<Stay: {} at {}>".format(self.checkin, self.lodging.name)
 
@@ -201,25 +143,6 @@ class Leg(models.Model):
     carrier = models.ForeignKey(ServiceProvider, related_name="legs")
     trip = models.ForeignKey(Trip, related_name="legs")
     type = models.CharField(max_length=16, choices=LEG_TYPES)
-
-    def to_dict(self):
-        ret = {
-            "number": self.number,
-            "origin": self.origin.to_dict(),
-            "destination": self.destination.to_dict(),
-            "departure_time": self.departure,
-            "arrival_time": self.arrival,
-            "carrier": self.carrier.to_dict(),
-            "length": self.length,
-            "percent": None,
-            "complete": self.complete,
-            "type": self.type,
-        }
-
-        if self.active:
-            ret["percent"] = self.percent
-
-        return ret
 
     @property
     def complete(self, **filters):
