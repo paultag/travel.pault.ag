@@ -31,10 +31,11 @@ VERBS = {
 @require_http_methods(["POST"])
 @csrf_exempt
 def query(request):
-    inquery = request.POST.get('Message', "").strip().lower()
-    from_ = request.POST['From']
+    inquery = request.POST['Body'].lower().strip()
+    to = request.POST['To'].strip("+.-").strip()
+
     try:
-        number = TwilioNumber.objects.get(number=from_)
+        number = TwilioNumber.objects.get(number=to)
     except TwilioNumber.DoesNotExist:
         raise  # eror sanely here or something
 
