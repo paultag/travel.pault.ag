@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.conf import settings
 
 from django.contrib.auth.models import User
-from ..models import Place, Trip
+from ..models import Place, Trip, TwilioNumber
 
 
 def text(request, message):
@@ -13,9 +13,13 @@ def text(request, message):
     }, content_type="application/xml")
 
 
-def where(request, message):
+def where(request, number, message):
+    user = number.user
+    place = Place.locate_user(user=user)
+
     return render(request, "travel/twilio/sms.xml", {
-        "message": "Hello, World"
+        "message": "{} is scheduled to be in {}".format(
+            user.first_name, place.name)
     }, content_type="application/xml")
 
 
@@ -28,6 +32,13 @@ VERBS = {
 @csrf_exempt
 def query(request):
     inquery = request.POST.get('Message', "").strip().lower()
+    from_ = request.POST['From']
+    try:
+        number = TwilioNumber.objects.get(number=from_)
+    except TwilioNumber.DoesNotExist:
+        raise  # eror sanely here or something
+
     if inquery in VERBS:
-        return VERBS[inquery](request, inquery)
+        return VERBS[inquery](request, number, inquery)
+
     return text(request, "Hello, World")
