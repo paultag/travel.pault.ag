@@ -24,6 +24,7 @@ STAY_SPEC = {
         "checkin",
         "checkout",
         "id",
+        "complete",
     ]
 }
 
@@ -36,6 +37,10 @@ LEG_SPEC = {
         "departure",
         "arrival",
         "type",
+        "complete",
+        "active",
+        "length",
+        "percent",
     ]
 }
 

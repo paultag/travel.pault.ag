@@ -187,6 +187,9 @@ class Leg(models.Model):
 
     @property
     def percent(self, **filters):
+        if not self.active:
+            return None
+
         now = dt.datetime.now(dt.timezone.utc)
 
         from_start = self.arrival_time - now
