@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.conf import settings
+from django.http import Http404
 import datetime as dt
 import pytz
 
@@ -17,7 +18,10 @@ class TripView(TravelView):
     PUBLIC_SCHEMA = TRIP_SPEC
 
     def lookup(self, trip):
-        return Trip.objects.get(id=trip)
+        try:
+            return Trip.objects.get(id=trip)
+        except Trip.DoesNotExist:
+            raise Http404("No such trip")
 
     def render(self, request, trip):
         legs = trip.legs.all().order_by("departure_time")
@@ -40,5 +44,9 @@ class TripsView(TravelView):
         })
 
     def lookup(self, user):
-        user = User.objects.get(username=user)
+        try:
+            user = User.objects.get(username=user)
+        except User.DoesNotExist:
+            raise Http404("No such user")
+
         return Trip.get_active_trips(user=user)
