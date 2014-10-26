@@ -5,13 +5,26 @@ import datetime as dt
 import pytz
 
 from django.contrib.auth.models import User
-from ..models import Trip, Stay
+from ..models import Trip, Stay, Place
 from ..helpers import TravelView
-from ..specs import TRIP_SPEC
+from ..specs import TRIP_SPEC, PLACE_SPEC
 
 
 def home(request):
     return render(request, "travel/public/home.html")
+
+
+class WhereView(TravelView):
+    PUBLIC_SCHEMA = PLACE_SPEC
+
+    def lookup(self, user):
+        user = User.objects.get(username=user)
+        return Place.locate_user(user)
+
+    def render(self, request, place):
+        return render(request, "travel/public/where.html", {
+            "place": place,
+        })
 
 
 class TripView(TravelView):
