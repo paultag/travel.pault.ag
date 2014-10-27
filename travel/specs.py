@@ -52,6 +52,7 @@ TRIP_SPEC = {
         "reason",
         "start",
         "end",
+        "id",
         ("legs", LEG_SPEC),
         ("stays", STAY_SPEC),
     ]

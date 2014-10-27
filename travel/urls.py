@@ -5,7 +5,10 @@ from .views import TripView, TripsView, WhereView
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'travel.views.home', name='home'),
+
     url(r'^trips/(?P<user>.*)/$', TripsView.as_view(), name='trips'),
+    url(r'^trips/(?P<user>.*)/calendar.ical$', 'travel.views.calendar', name='calendar'),
+
     url(r'^trip/(?P<trip>.*)/$', TripView.as_view(), name='trip'),
     url(r'^whereis/(?P<user>.*)/$', WhereView.as_view(), name='whereis'),
 

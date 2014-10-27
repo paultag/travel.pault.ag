@@ -5,3 +5,4 @@ pytz
 dj_database_url
 dj-static
 DjangoRestless
+icalendar
