@@ -8,6 +8,10 @@
 
 <h1>Active Trips</h1>
 
+<h3>Wondering <a href="{% url 'whereis' user.username %}">where I am?</a></h3>
+<br />
+<br />
+
 {% for trip in active_trips %}
 <div>
     <div class="well">

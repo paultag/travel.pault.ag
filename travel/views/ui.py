@@ -51,9 +51,10 @@ class TripView(TravelView):
 class TripsView(TravelView):
     PUBLIC_SCHEMA = TRIP_SPEC
 
-    def render(self, request, trips):
+    def render(self, request, trips, user):
         return render(request, "travel/public/trips.html", {
             "active_trips": trips,
+            "user": user,
         })
 
     def lookup(self, user):
@@ -62,4 +63,4 @@ class TripsView(TravelView):
         except User.DoesNotExist:
             raise Http404("No such user")
 
-        return Trip.get_active_trips(user=user)
+        return (Trip.get_active_trips(user=user), user)
