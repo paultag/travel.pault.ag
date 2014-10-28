@@ -5,17 +5,25 @@
 
 {% block content %}
 <style>
-body {
+body, html {
     width:            100%;
     height:           100%;
     background:       url({{place.photo}}) no-repeat center center fixed;
     background-size:  cover;
 }
+
+.container {
+    height: 100%;
+}
+
 #where {
-    margin-top:       50%;
-    width:            100%;
+    height: 100%;
     color:            #FFFFFF;
-    text-align:       center;
+    display:          flex;
+    justify-content:  center;
+    align-items:      center;
+
+
 }
 </style>
 
