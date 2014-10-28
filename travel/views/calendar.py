@@ -1,9 +1,11 @@
 from django.http import HttpResponse
 
 from django.contrib.auth.models import User
-from ..models import Trip
+from ..models import Trip, LEG_TYPES
 
 from icalendar import Calendar, Event
+
+LEG_TYPE_NAMES = dict(LEG_TYPES)
 
 
 def calendar(request, user):
@@ -29,10 +31,10 @@ def calendar(request, user):
             event = Event()
             event['summary'] = "{0.carrier.name} {0.number}".format(leg)
             event['description'] = (
-                "{0.carrier.name} {0.number} ({0.type}) from "
+                "{0.carrier.name} {0.number} from "
                 "{0.origin.code} ({0.origin.name}) to "
-                "{0.destination.code} ({0.destination.name})"
-                ).format(leg)
+                "{0.destination.code} ({0.destination.name}) by {1}"
+                ).format(leg, LEG_TYPE_NAMES[leg.type])
             event['uid'] = "{id}.leg.pault.ag".format(id=leg.id)
             event.add('dtstart', leg.departure)
             event.add('dtend', leg.arrival)
