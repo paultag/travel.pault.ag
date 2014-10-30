@@ -15,7 +15,7 @@ import json
 
 
 
-class APIView(View):
+class APIListView(View):
     http_method_names = ['get']  # HEAD soon?
     PUBLIC_SCHEMA = {}
     max_per_page = 100
@@ -61,7 +61,7 @@ class APIView(View):
 
 
 
-class TripsView(APIView):
+class TripsView(APIListView):
     PUBLIC_SCHEMA = TRIP_SPEC
     def get_query_set(self, request, user):
         user = User.objects.filter(username=user)
