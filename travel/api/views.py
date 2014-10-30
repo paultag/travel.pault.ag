@@ -14,17 +14,6 @@ import math
 import json
 
 
-class JSONEncoder(json.JSONEncoder):
-    def default(self, obj, **kwargs):
-        if isinstance(obj, dt.timedelta):
-            return obj.total_seconds()
-        if isinstance(obj, (dt.date, dt.datetime)):
-            if obj.tzinfo is None:
-                raise TypeError(
-                    "date '%s' is not fully timezone qualified." % (obj))
-            return "{}".format(obj.isoformat())
-        return super(JSONEncoder, self).default(obj, **kwargs)
-
 
 class APIView(View):
     http_method_names = ['get']  # HEAD soon?
