@@ -6,7 +6,6 @@ import pytz
 
 from django.contrib.auth.models import User
 from ..models import Trip, Stay, Place
-from ..specs import TRIP_SPEC, PLACE_SPEC
 
 
 def home(request):
