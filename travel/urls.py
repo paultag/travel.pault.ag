@@ -12,4 +12,6 @@ urlpatterns = patterns('',
     url(r'^whereis/(?P<user>.*)/$', 'travel.views.ui.whereis', name='whereis'),
 
     url(r'^twilio/query/$', 'travel.views.twilio.query', name='query'),
+
+    url(r'^api/v1/', include('travel.api.urls')),
 )
