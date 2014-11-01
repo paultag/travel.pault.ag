@@ -6,8 +6,8 @@ from restless.models import serialize
 from restless.http import Http200
 
 from django.contrib.auth.models import User
-from ..models import Trip
-from .specs import TRIP_SPEC
+from ..models import Trip, Place
+from .specs import TRIP_SPEC, PLACE_SPEC
 
 import datetime as dt
 import math
@@ -42,19 +42,6 @@ class APIListView(View):
             raise HttpError(404, 'No such page (heh, literally - its out of bounds)')
 
         count = data_page.paginator.count
-
-        # response = {
-        #     "meta": {
-        #         "count": len(data_page.object_list),
-        #         "page": page,
-        #         "per_page": per_page,
-        #         "max_page": math.ceil(count / per_page),
-        #         "total_count": count,
-        #     }, "results": [
-        #         serialize(x, **self.PUBLIC_SCHEMA) for x in data_page.object_list
-        #     ]
-        # }
-
         response = [serialize(x, **self.PUBLIC_SCHEMA)
                     for x in data_page.object_list]
 
@@ -63,6 +50,16 @@ class APIListView(View):
         return response
 
 
+class APIDetailView(View):
+    http_method_names = ['get']  # HEAD soon?
+    PUBLIC_SCHEMA = None
+
+    def get(self, request, *args, **kwargs):
+        params = dict(request.GET)
+        response = Http200(self.get_object(request, *args, **kwargs))
+        response['Access-Control-Allow-Origin'] = "*"
+        return response
+
 
 class TripsView(APIListView):
     PUBLIC_SCHEMA = TRIP_SPEC
@@ -70,3 +67,17 @@ class TripsView(APIListView):
         user = User.objects.filter(username=user)
         trips = Trip.objects.filter(user=user)
         return trips
+
+
+class WhereisView(APIDetailView):
+    def get_object(self, request, user):
+        user = User.objects.get(username=user)
+        place = Place.locate_user(user)
+        return {
+            "user": serialize(user, **{
+                "fields": [
+                    "username"
+                ]
+            }),
+            "place": serialize(place, **PLACE_SPEC),
+        }
