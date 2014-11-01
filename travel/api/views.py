@@ -6,8 +6,8 @@ from restless.models import serialize
 from restless.http import Http200
 
 from django.contrib.auth.models import User
-from ..models import Trip, Place
-from .specs import TRIP_SPEC, PLACE_SPEC
+from ..models import Trip, Place, Stay
+from .specs import TRIP_SPEC, PLACE_SPEC, STAY_SPEC
 
 import datetime as dt
 import math
@@ -70,6 +70,14 @@ class TripsView(APIListView):
         user = User.objects.filter(username=user)
         trips = Trip.objects.filter(user=user)
         return trips
+
+
+class StaysView(APIListView):
+    PUBLIC_SCHEMA = STAY_SPEC
+    def get_query_set(self, request, user):
+        user = User.objects.filter(username=user)
+        stays = Stay.objects.filter(user=user)
+        return stays
 
 
 class LocateView(APIDetailView):
