@@ -9,6 +9,14 @@ SERVICE_PROVIDER_SPEC = {
 STOP_SPEC = {}
 PLACE_SPEC = {}
 
+USER_SPEC = {
+    "fields": [
+        "username",
+        "first_name",
+        "last_name"
+    ]
+}
+
 LODGING_SPEC = {
     "include": [
         ("place", PLACE_SPEC),
@@ -21,6 +29,7 @@ LODGING_SPEC = {
 STAY_SPEC = {
     "fields": [
         ("lodging", LODGING_SPEC),
+        ("user", USER_SPEC),
         "checkin",
         "checkout",
         "id",
@@ -47,7 +56,7 @@ LEG_SPEC = {
 
 TRIP_SPEC = {
     "fields": [
-        ("user", {"fields": ["username"]}),
+        ("user", USER_SPEC),
         "name",
         "reason",
         "start",
