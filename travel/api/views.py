@@ -56,7 +56,10 @@ class APIDetailView(View):
 
     def get(self, request, *args, **kwargs):
         params = dict(request.GET)
-        response = Http200(self.get_object(request, *args, **kwargs))
+        response = Http200(serialize(
+            self.get_object(request, *args, **kwargs),
+            **self.PUBLIC_SCHEMA))
+
         response['Access-Control-Allow-Origin'] = "*"
         return response
 
@@ -69,15 +72,9 @@ class TripsView(APIListView):
         return trips
 
 
-class WhereisView(APIDetailView):
+class LocateView(APIDetailView):
+    PUBLIC_SCHEMA = PLACE_SPEC
+
     def get_object(self, request, user):
-        user = User.objects.get(username=user)
-        place = Place.locate_user(user)
-        return {
-            "user": serialize(user, **{
-                "fields": [
-                    "username"
-                ]
-            }),
-            "place": serialize(place, **PLACE_SPEC),
-        }
+        user = User.objects.filter(username=user)
+        return Place.locate_user(user)
