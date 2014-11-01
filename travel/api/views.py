@@ -43,17 +43,20 @@ class APIListView(View):
 
         count = data_page.paginator.count
 
-        response = {
-            "meta": {
-                "count": len(data_page.object_list),
-                "page": page,
-                "per_page": per_page,
-                "max_page": math.ceil(count / per_page),
-                "total_count": count,
-            }, "results": [
-                serialize(x, **self.PUBLIC_SCHEMA) for x in data_page.object_list
-            ]
-        }
+        # response = {
+        #     "meta": {
+        #         "count": len(data_page.object_list),
+        #         "page": page,
+        #         "per_page": per_page,
+        #         "max_page": math.ceil(count / per_page),
+        #         "total_count": count,
+        #     }, "results": [
+        #         serialize(x, **self.PUBLIC_SCHEMA) for x in data_page.object_list
+        #     ]
+        # }
+
+        response = [serialize(x, **self.PUBLIC_SCHEMA)
+                    for x in data_page.object_list]
 
         response = Http200(response)
         response['Access-Control-Allow-Origin'] = "*"
