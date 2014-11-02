@@ -50,6 +50,7 @@ LEG_SPEC = {
         "active",
         "length",
         "percent",
+        "number",
     ]
 }
 
