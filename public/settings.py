@@ -53,5 +53,5 @@ USE_L10N = True
 USE_TZ = True
 STATIC_URL = '/static/'
 if not DEBUG:
-    STATIC_ROOT = '/static/'
+    STATIC_ROOT = 'static'
 ENABLE_MAPBOX = OPTION("TRAVEL_ENABLE_MAPBOX", "True")
