@@ -148,6 +148,7 @@ LEG_TYPES = (
     ('air', 'Airplane'),
     ('train', 'Train'),
     ('bus', 'Bus'),
+    ('car', 'Car'),
 )
 
 
