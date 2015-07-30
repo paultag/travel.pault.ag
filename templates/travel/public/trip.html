@@ -85,7 +85,7 @@
 {% for leg in legs %}
     <tr {% if leg.complete %}class='complete'{% endif %}>
             <td>
-<i class="fa fa-{% if leg.type == "air" %}plane{% elif leg.type == "bus" %}bus{% else %}road{% endif %} fa-2x"></i>
+            <i class="fa fa-{% if leg.type == "car" %}car{% elif leg.type == "air" %}plane{% elif leg.type == "bus" %}bus{% else %}road{% endif %} fa-2x"></i>
             </td>
             <td>{{leg.carrier.name}}</td>
             <td>{{leg.number}}</td>
